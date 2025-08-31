@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hra Panna nebo Orel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #E0E0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(45deg, #FF6B6B, #F8E8A6, #80E380, #80BFFF, #C980FF);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .container {
+            background-color: rgba(31, 31, 31, 0.9);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border: 2px solid #333;
+        }
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #B0B0B0;
+            margin-bottom: 2rem;
+        }
+        .coin-container {
+            perspective: 1000px;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .coin {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease-in-out, opacity 0.5s;
+        }
+        .coin.dirty {
+            background-color: #8B4513;
+            box-shadow: 0 0 15px rgba(139, 69, 19, 0.6), inset 0 0 8px rgba(0, 0, 0, 0.7);
+        }
+        .coin.golden {
+            background-color: #FFD700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 15px rgba(255, 255, 0, 0.3);
+        }
+        .coin.diamond {
+            background: linear-gradient(45deg, #E0FFFF, #66CDAA, #E0FFFF);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.9), inset 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: diamond-pulse 2s infinite ease-in-out;
+        }
+        @keyframes diamond-pulse {
+            0% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.9); }
+            50% { box-shadow: 0 0 55px rgba(0, 255, 255, 1); }
+            100% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.9); }
+        }
+        .coin.platinum {
+            background: linear-gradient(45deg, #E5E4E2, #C0C0C0, #A9A9A9);
+            box-shadow: 0 0 50px rgba(192, 192, 192, 0.9), inset 0 0 25px rgba(255, 255, 255, 0.5);
+            animation: platinum-shine 3s infinite ease-in-out;
+        }
+        @keyframes platinum-shine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .coin.flipping {
+            animation: flip-3d 2s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+        }
+        .coin.fire-trail {
+            box-shadow: 0 0 20px 5px #FF4500, inset 0 0 10px #FF8C00;
+            animation: fire-pulse 1s infinite ease-in-out;
+        }
+        @keyframes fire-pulse {
+            0% { box-shadow: 0 0 20px 5px #FF4500, inset 0 0 10px #FF8C00; }
+            50% { box-shadow: 0 0 30px 8px #FF8C00, inset 0 0 15px #FF4500; }
+            100% { box-shadow: 0 0 20px 5px #FF4500, inset 0 0 10px #FF8C00; }
+        }
+        .coin.water-trail {
+            box-shadow: 0 0 20px 5px #00BFFF, inset 0 0 10px #0077be;
+            animation: water-glow 1.5s infinite ease-in-out;
+        }
+        @keyframes water-glow {
+            0% { box-shadow: 0 0 20px 5px #00BFFF, inset 0 0 10px #0077be; }
+            50% { box-shadow: 0 0 30px 8px #0077be, inset 0 0 15px #00BFFF; }
+            100% { box-shadow: 0 0 20px 5px #00BFFF, inset 0 0 10px #0077be; }
+        }
+        .coin.glow-trail {
+            box-shadow: 0 0 25px 8px #fff, inset 0 0 15px #FFFFE0;
+            animation: glow-shine 0.8s infinite ease-in-out;
+        }
+        @keyframes glow-shine {
+            0% { box-shadow: 0 0 25px 8px #fff, inset 0 0 15px #FFFFE0; }
+            50% { box-shadow: 0 0 35px 10px #FFFFE0, inset 0 0 20px #fff; }
+            100% { box-shadow: 0 0 25px 8px #fff, inset 0 0 15px #FFFFE0; }
+        }
+        .coin-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #121212;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            backface-visibility: hidden;
+        }
+        .coin-side .side-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .coin-front {
+            transform: rotateY(0deg);
+        }
+        .coin-back {
+            transform: rotateY(180deg);
+        }
+        @keyframes flip-3d {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(540deg); }
+            100% { transform: rotateY(1080deg); }
+        }
+        .buttons-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .shop-button {
+            background-color: #007BFF;
+            color: white;
+        }
+        .shop-button:hover {
+            background-color: #0056b3;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-heads {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-heads:hover {
+            background-color: #218838;
+        }
+        .btn-tails {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-tails:hover {
+            background-color: #c82333;
+        }
+        .message {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            min-height: 2rem;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background-color: #2C2C2C;
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            position: relative;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #B0B0B0;
+            transition: color 0.2s;
+        }
+        .modal-close:hover {
+            color: white;
+        }
+        .shop-items-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #4a4a4a #3a3a3a;
+            padding-right: 1rem;
+            margin-right: -1rem;
+        }
+        .shop-items-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .shop-items-container::-webkit-scrollbar-track {
+            background: #3a3a3a;
+            border-radius: 10px;
+        }
+        .shop-items-container::-webkit-scrollbar-thumb {
+            background-color: #4a4a4a;
+            border-radius: 10px;
+            border: 3px solid #3a3a3a;
+        }
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3A3A3A;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #555;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .shop-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        .shop-item h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        .shop-item p {
+            font-size: 0.9rem;
+            color: #B0B0B0;
+        }
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFD700;
+        }
+        .buy-btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .buy-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        .buy-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        .hidden {
+            display: none;
+        }
+        .chance-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            height: 40px;
+            width: 100%;
+            max-width: 300px;
+            margin: 1.5rem auto 0;
+            border-radius: 9999px;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .chance-half {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            padding: 0 0.5rem;
+            transition: all 0.5s ease-in-out;
+        }
+        .heads-chance-half {
+            background-color: #28a745;
+            border-right: 2px solid #1F1F1F;
+        }
+        .tails-chance-half {
+            background-color: #dc3545;
+        }
+        /* Coin size styles */
+        .coin.small {
+            width: 75px;
+            height: 75px;
+        }
+        .coin.medium {
+            width: 125px;
+            height: 125px;
+        }
+        .coin.large {
+            width: 175px;
+            height: 175px;
+        }
+        .rainbow-item-wrapper {
+            background-image: linear-gradient(45deg, #f06, #f90, #9f0, #09f, #33f, #96f);
+            padding: 3px;
+            border-radius: 1rem;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            animation: rainbow-border 4s linear infinite;
+        }
+        .rainbow-buy-btn {
+            background-image: linear-gradient(45deg, #f06, #f90, #9f0, #09f, #33f, #96f);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-size: 200% 200%;
+        }
+        .rainbow-buy-btn:hover:not(:disabled) {
+            background-position: 100% 100%;
+            transform: scale(1.05);
+        }
+        .shop-category {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #FFD700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 0.5rem;
+        }
+        .exclusive-disabled {
+            filter: grayscale(80%);
+            opacity: 0.7;
+        }
+
+    </style>
+</head>
+<body>
+    <audio id="background-music" loop autoplay>
+        <source src="https://www.learning-mind.com/wp-content/uploads/2016/11/relaxing-music-for-stress.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="container">
+        <h1 class="title">Panna nebo Orel 🪙</h1>
+        <div class="text-2xl mb-4">Peníze: <span id="money-display">0</span> ✨</div>
+
+        <div class="coin-container" id="coin-container">
+            <!-- Coins will be generated here by JavaScript -->
+        </div>
+
+        <div class="buttons-container">
+            <button id="heads-btn" class="btn btn-heads">Panna 👧</button>
+            <button id="tails-btn" class="btn btn-tails">Orel 🦅</button>
+        </div>
+
+        <div class="chance-container">
+            <div class="chance-half heads-chance-half">
+                <span>Panna: <span id="heads-chance-display">50%</span></span>
+            </div>
+            <div class="chance-half tails-chance-half">
+                <span>Orel: <span id="tails-chance-display">50%</span></span>
+            </div>
+        </div>
+
+        <div id="message" class="message">Vyber si Panna nebo Orel a začni hrát! 😊</div>
+        <div class="text-lg text-center mt-2">Hody: <span id="flip-count-display">0</span> | Mincí na hod: <span id="multi-flip-display">1</span></div>
+
+        <div class="flex flex-col sm:flex-row justify-center mt-6 gap-4">
+            <button id="shop-btn" class="btn shop-button">Obchod 🛒</button>
+            <button id="auto-flip-btn" class="btn shop-button hidden">Automaticky točit 🤖</button>
+            <button id="use-luck-charm-btn" class="btn shop-button hidden">Použít kouzlo ✨</button>
+        </div>
+    </div>
+
+    <div id="shop-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal-btn" class="modal-close">&times;</span>
+            <h2 class="title text-2xl mb-4">Obchod 🛍️</h2>
+            <p class="text-lg text-center mb-4">Vaše peníze: <span id="shop-money-display">0</span> ✨</p>
+
+            <div id="shop-items-container" class="shop-items-container">
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const __app_id = typeof window.__app_id !== 'undefined' ? window.__app_id : 'default-app-id';
+        const __firebase_config = JSON.parse(typeof window.__firebase_config !== 'undefined' ? window.__firebase_config : '{}');
+        const __initial_auth_token = typeof window.__initial_auth_token !== 'undefined' ? window.__initial_auth_token : null;
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const coinContainer = document.getElementById('coin-container');
+        const headsBtn = document.getElementById('heads-btn');
+        const tailsBtn = document.getElementById('tails-btn');
+        const moneyDisplay = document.getElementById('money-display');
+        const flipCountDisplay = document.getElementById('flip-count-display');
+        const multiFlipDisplay = document.getElementById('multi-flip-display');
+        const messageDisplay = document.getElementById('message');
+        const shopBtn = document.getElementById('shop-btn');
+        const autoFlipBtn = document.getElementById('auto-flip-btn');
+        const useLuckCharmBtn = document.getElementById('use-luck-charm-btn');
+        const shopModal = document.getElementById('shop-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const shopMoneyDisplay = document.getElementById('shop-money-display');
+        const shopItemsContainer = document.getElementById('shop-items-container');
+        const headsChanceDisplay = document.getElementById('heads-chance-display');
+        const tailsChanceDisplay = document.getElementById('tails-chance-display');
+
+        let money = 0;
+        let isFlipping = false;
+        let flipCount = 0;
+        let flipSpeedMultiplier = 0.5;
+        let currentCoinType = 'dirty';
+        let multiFlipCount = 1;
+        let winAmountMultiplier = 2;
+        let headsWinChance = 0.5;
+        let tailsWinChance = 0.5;
+        let luckCharmCount = 0;
+        let autoFlipInterval = null;
+        let isAutoFlipping = false;
+        let userId = null;
+        let currentTrail = null;
+        let currentCoinSize = 'medium';
+
+        let db;
+        let auth;
+        let userDocRef;
+        let isFirebaseReady = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (Object.keys(__firebase_config).length > 0) {
+                const app = initializeApp(__firebase_config);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                try {
+                    if (__initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    userId = auth.currentUser.uid;
+                    userDocRef = doc(db, `/artifacts/${__app_id}/users/${userId}/gameData/state`);
+                    isFirebaseReady = true;
+
+                    onSnapshot(userDocRef, (docSnap) => {
+                        if (docSnap.exists()) {
+                            const data = docSnap.data();
+                            money = data.money || 1;
+                            flipCount = data.flipCount || 0;
+                            flipSpeedMultiplier = data.flipSpeedMultiplier || 0.5;
+                            currentCoinType = data.currentCoinType || 'dirty';
+                            multiFlipCount = data.multiFlipCount || 1;
+                            const betterEarningItem = shopItems.find(item => item.id === 'better-earning');
+                            betterEarningItem.currentLevel = data['better-earning'] ? data['better-earning'].currentLevel : 0;
+                            winAmountMultiplier = 2 + (betterEarningItem.currentLevel * 0.1);
+
+                            headsWinChance = data.headsWinChance || 0.5;
+                            tailsWinChance = data.tailsWinChance || 0.5;
+                            luckCharmCount = data.luckCharmCount || 0;
+                            currentTrail = data.currentTrail || null;
+                            currentCoinSize = data.currentCoinSize || 'medium';
+                            
+                            shopItems.forEach(item => {
+                                if (data[item.id]) {
+                                    item.currentLevel = data[item.id].currentLevel;
+                                }
+                            });
+                            updateUI();
+                        } else {
+                            const initialData = {
+                                money: 1,
+                                flipCount: 0,
+                                flipSpeedMultiplier: 0.5,
+                                currentCoinType: 'dirty',
+                                multiFlipCount: 1,
+                                winAmountMultiplier: 2,
+                                headsWinChance: 0.5,
+                                tailsWinChance: 0.5,
+                                luckCharmCount: 0,
+                                currentTrail: null,
+                                currentCoinSize: 'medium',
+                                'better-earning': { currentLevel: 0 },
+                                'flip-speed': { currentLevel: 0 },
+                                'chance-upgrade': { currentLevel: 0 },
+                                'multi-flip': { currentLevel: 0 },
+                                'coin-size-upgrade': { currentLevel: 0 }
+                            };
+                            setDoc(userDocRef, initialData);
+                        }
+                    });
+                } catch (error) {
+                    console.error("Firebase authentication failed:", error);
+                    isFirebaseReady = false;
+                    loadLocalState();
+                    updateUI();
+                }
+            } else {
+                isFirebaseReady = false;
+                loadLocalState();
+                updateUI();
+            }
+        });
+
+        function updateUI() {
+            moneyDisplay.textContent = money;
+            flipCountDisplay.textContent = flipCount;
+            multiFlipDisplay.textContent = multiFlipCount;
+            shopMoneyDisplay.textContent = money;
+            headsChanceDisplay.textContent = `${(headsWinChance * 100).toFixed(2)}%`;
+            tailsChanceDisplay.textContent = `${(tailsWinChance * 100).toFixed(2)}%`;
+            renderShopItems();
+            renderCoins();
+            
+            if (flipCount >= 100) {
+                autoFlipBtn.classList.remove('hidden');
+            }
+            if (luckCharmCount > 0) {
+                useLuckCharmBtn.classList.remove('hidden');
+            } else {
+                useLuckCharmBtn.classList.add('hidden');
+            }
+        }
+
+        function saveState() {
+            const dataToSave = {
+                money: money,
+                flipCount: flipCount,
+                flipSpeedMultiplier: flipSpeedMultiplier,
+                currentCoinType: currentCoinType,
+                multiFlipCount: multiFlipCount,
+                winAmountMultiplier: winAmountMultiplier,
+                headsWinChance: headsWinChance,
+                tailsWinChance: tailsWinChance,
+                luckCharmCount: luckCharmCount,
+                currentTrail: currentTrail,
+                currentCoinSize: currentCoinSize
+            };
+            shopItems.forEach(item => {
+                dataToSave[item.id] = { currentLevel: item.currentLevel };
+            });
+
+            if (isFirebaseReady) {
+                setDoc(userDocRef, dataToSave);
+            } else {
+                for (const key in dataToSave) {
+                    localStorage.setItem(key, JSON.stringify(dataToSave[key]));
+                }
+            }
+        }
+
+        function loadLocalState() {
+            try {
+                money = JSON.parse(localStorage.getItem('money')) || 1;
+                flipCount = JSON.parse(localStorage.getItem('flipCount')) || 0;
+                flipSpeedMultiplier = JSON.parse(localStorage.getItem('flipSpeedMultiplier')) || 0.5;
+                currentCoinType = JSON.parse(localStorage.getItem('currentCoinType')) || 'dirty';
+                multiFlipCount = JSON.parse(localStorage.getItem('multiFlipCount')) || 1;
+                const betterEarningItem = shopItems.find(item => item.id === 'better-earning');
+                const savedEarningLevel = JSON.parse(localStorage.getItem('better-earning'))?.currentLevel || 0;
+                betterEarningItem.currentLevel = savedEarningLevel;
+                winAmountMultiplier = 2 + (savedEarningLevel * 0.1);
+
+                headsWinChance = JSON.parse(localStorage.getItem('headsWinChance')) || 0.5;
+                tailsWinChance = JSON.parse(localStorage.getItem('tailsWinChance')) || 0.5;
+                luckCharmCount = JSON.parse(localStorage.getItem('luckCharmCount')) || 0;
+                currentTrail = JSON.parse(localStorage.getItem('currentTrail')) || null;
+                currentCoinSize = JSON.parse(localStorage.getItem('currentCoinSize')) || 'medium';
+
+                shopItems.forEach(item => {
+                    const savedItem = JSON.parse(localStorage.getItem(item.id));
+                    if (savedItem) {
+                        item.currentLevel = savedItem.currentLevel;
+                    }
+                });
+            } catch (e) {
+                console.error("Failed to load local state, resetting.", e);
+                money = 1;
+                flipCount = 0;
+                flipSpeedMultiplier = 0.5;
+                currentCoinType = 'dirty';
+                multiFlipCount = 1;
+                winAmountMultiplier = 2;
+                headsWinChance = 0.5;
+                tailsWinChance = 0.5;
+                luckCharmCount = 0;
+                currentTrail = null;
+                currentCoinSize = 'medium';
+                shopItems.forEach(item => item.currentLevel = 0);
+            }
+        }
+        
+        function renderCoins() {
+            coinContainer.innerHTML = '';
+            for (let i = 0; i < multiFlipCount; i++) {
+                const coinDiv = document.createElement('div');
+                coinDiv.className = `coin ${currentCoinType} ${currentTrail} ${currentCoinSize}`;
+                coinDiv.innerHTML = `
+                    <div class="coin-side coin-front">
+                        <span class="side-text">PANNA</span>
+                    </div>
+                    <div class="coin-side coin-back">
+                        <span class="side-text">OREL</span>
+                    </div>
+                `;
+                coinContainer.appendChild(coinDiv);
+            }
+        }
+
+        const shopItems = [
+            {
+                id: 'better-earning',
+                name: 'Lepší výdělek 💰',
+                description: 'Zvyšuje zisk za výhru. (Úroveň: ',
+                price: [10, 25, 50, 100, 1000],
+                currentLevel: 0,
+                maxLevel: 5,
+                applyUpgrade: () => {
+                    winAmountMultiplier = 2 + (this.currentLevel * 0.1);
+                },
+                category: 'Funkční vylepšení'
+            },
+            {
+                id: 'flip-speed',
+                name: 'Rychlost otáčení 💨',
+                description: 'Mince se točí rychleji. (Úroveň: ',
+                price: 200,
+                currentLevel: 0,
+                maxLevel: 1000,
+                applyUpgrade: () => {
+                    flipSpeedMultiplier += 0.5;
+                },
+                category: 'Funkční vylepšení'
+            },
+            {
+                id: 'luck-charm',
+                name: 'Štěstěné kouzlo ✨',
+                description: 'Jednorázově zvýší šanci na výhru.',
+                price: 250,
+                currentLevel: 0,
+                maxLevel: 100,
+                applyUpgrade: () => {
+                    luckCharmCount++;
+                },
+                category: 'Funkční vylepšení'
+            },
+            {
+                id: 'golden-coin',
+                name: 'Zlatá mince 🏆',
+                description: 'Mince dostane zlatou barvu.',
+                price: 300,
+                currentLevel: 0,
+                maxLevel: 1,
+                exclusiveTo: ['diamond-coin', 'platinum-coin'],
+                applyUpgrade: () => {
+                    currentCoinType = 'golden';
+                },
+                category: 'Vzhled mincí'
+            },
+            {
+                id: 'diamond-coin',
+                name: 'Diamantová mince 💎',
+                description: 'Mince dostane diamantový vzhled.',
+                price: 600,
+                currentLevel: 0,
+                maxLevel: 1,
+                exclusiveTo: ['platinum-coin'],
+                applyUpgrade: () => {
+                    currentCoinType = 'diamond';
+                },
+                category: 'Vzhled mincí'
+            },
+            {
+                id: 'platinum-coin',
+                name: 'Platinová mince 👑',
+                description: 'Nejvzácnější mince, platinový vzhled.',
+                price: 1500,
+                currentLevel: 0,
+                maxLevel: 1,
+                applyUpgrade: () => {
+                    currentCoinType = 'platinum';
+                },
+                category: 'Vzhled mincí'
+            },
+            {
+                id: 'coin-size-upgrade',
+                name: 'Zvětšení mincí 📈',
+                description: 'Mince se zvětší. (Úroveň: ',
+                price: 2000,
+                currentLevel: 0,
+                maxLevel: 2,
+                applyUpgrade: () => {
+                    const sizes = ['small', 'medium', 'large'];
+                    currentCoinSize = sizes[this.currentLevel];
+                },
+                category: 'Funkční vylepšení'
+            },
+            {
+                id: 'chance-upgrade',
+                name: 'Vylepšení šance 🍀',
+                description: 'Zvyšuje šanci na výhru pro zvolenou stranu.',
+                price: 10000,
+                currentLevel: 0,
+                maxLevel: 1000000,
+                applyUpgrade: (side) => {
+                    const chanceIncrease = 0.01;
+                    if (side === 'heads') {
+                        if (headsWinChance + chanceIncrease <= 1) {
+                             headsWinChance = Math.min(1, headsWinChance + chanceIncrease);
+                             tailsWinChance = 1 - headsWinChance;
+                        }
+                    } else if (side === 'tails') {
+                        if (tailsWinChance + chanceIncrease <= 1) {
+                            tailsWinChance = Math.min(1, tailsWinChance + chanceIncrease);
+                            headsWinChance = 1 - tailsWinChance;
+                        }
+                    }
+                    updateUI();
+                },
+                category: 'Funkční vylepšení'
+            },
+            {
+                id: 'multi-flip',
+                name: 'Násobný hod mincí 🎰',
+                description: 'Zvyšuje počet mincí, které hodíte. (Úroveň: ',
+                price: 1000000,
+                currentLevel: 0,
+                maxLevel: 6,
+                applyUpgrade: () => {
+                    multiFlipCount = this.currentLevel + 1;
+                    if (multiFlipCount > 7) multiFlipCount = 7;
+                },
+                category: 'Funkční vylepšení'
+            },
+            {
+                id: 'water-trail',
+                name: 'Vodní stopa 💧',
+                description: 'Přidá mincím vodní záři při točení.',
+                price: 1e12,
+                currentLevel: 0,
+                maxLevel: 1,
+                exclusiveTo: ['fire-trail', 'glow-trail'],
+                applyUpgrade: () => {
+                    currentTrail = 'water-trail';
+                },
+                category: 'Vzhled mincí'
+            },
+            {
+                id: 'fire-trail',
+                name: 'Ohnivá stopa 🔥',
+                description: 'Přidá mincím ohnivou záři při točení.',
+                price: 1e13,
+                currentLevel: 0,
+                maxLevel: 1,
+                exclusiveTo: ['water-trail', 'glow-trail'],
+                applyUpgrade: () => {
+                    currentTrail = 'fire-trail';
+                },
+                category: 'Vzhled mincí'
+            },
+            {
+                id: 'glow-trail',
+                name: 'Zářivá stopa ✨',
+                description: 'Přidá mincím intenzivní záři při točení.',
+                price: 1e14,
+                currentLevel: 0,
+                maxLevel: 1,
+                exclusiveTo: ['fire-trail', 'water-trail'],
+                applyUpgrade: () => {
+                    currentTrail = 'glow-trail';
+                },
+                category: 'Vzhled mincí'
+            },
+        ];
+
+        function renderShopItems() {
+            shopItems.sort((a, b) => (a.price || a.basePrice) - (b.price || b.basePrice));
+            
+            shopItemsContainer.innerHTML = '';
+            
+            const categories = [...new Set(shopItems.map(item => item.category))];
+            
+            categories.forEach(category => {
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'shop-category';
+                categoryHeader.textContent = category;
+                shopItemsContainer.appendChild(categoryHeader);
+                
+                const itemsInCategory = shopItems.filter(item => item.category === category);
+                
+                itemsInCategory.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'shop-item';
+                    let price;
+                    if (item.id === 'better-earning') {
+                        price = item.price[item.currentLevel];
+                    } else if (Array.isArray(item.price)) {
+                        price = item.price[item.currentLevel] || null;
+                    } else {
+                        price = item.price * (item.currentLevel + 1);
+                    }
+
+                    let descriptionText;
+                    if (item.id === 'better-earning') {
+                         descriptionText = `Zvyšuje zisk za výhru. Aktuální násobek: ${(2 + item.currentLevel * 0.1).toFixed(1)}x`;
+                    } else {
+                        descriptionText = item.maxLevel > 1 ? `${item.description}${item.currentLevel}/${item.maxLevel})` : item.description;
+                    }
+
+                    let isDisabled = false;
+                    if (item.currentLevel >= item.maxLevel) isDisabled = true;
+                    if (money < price) isDisabled = true;
+                    if (item.exclusiveTo && item.exclusiveTo.some(exclusiveId => shopItems.find(i => i.id === exclusiveId)?.currentLevel > 0)) {
+                        isDisabled = true;
+                    }
+                    if (price === null) isDisabled = true;
+
+                    const exclusiveItem = shopItems.find(i => i.exclusiveTo?.includes(item.id) && i.currentLevel > 0);
+                    if (exclusiveItem) {
+                        itemEl.classList.add('exclusive-disabled');
+                    }
+                    
+                    let buyButtonHtml = `<button class="buy-btn" data-id="${item.id}" ${isDisabled ? 'disabled' : ''}>Koupit</button>`;
+                    
+                    if (item.id === 'chance-upgrade') {
+                        isDisabled = (money < price);
+                        itemEl.innerHTML = `
+                            <div>
+                                <h3 class="font-bold">${item.name}</h3>
+                                <p>${descriptionText}</p>
+                                <div class="mt-2 flex gap-2">
+                                    <button class="buy-chance-btn rainbow-buy-btn" data-side="heads" data-id="${item.id}" ${isDisabled || headsWinChance >= 1 ? 'disabled' : ''}>Panna</button>
+                                    <button class="buy-chance-btn rainbow-buy-btn" data-side="tails" data-id="${item.id}" ${isDisabled || tailsWinChance >= 1 ? 'disabled' : ''}>Orel</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="item-price">${price}</span>
+                            </div>
+                        `;
+                    } else {
+                        if (item.category === 'Vzhled mincí' && item.currentLevel === 0) {
+                            itemEl.innerHTML = `
+                                <div>
+                                    <h3 class="font-bold">${item.name}</h3>
+                                    <p>${descriptionText}</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="item-price">${price}</span>
+                                    <button class="buy-btn rainbow-buy-btn" data-id="${item.id}" ${isDisabled ? 'disabled' : ''}>Koupit</button>
+                                </div>
+                            `;
+                        } else {
+                             itemEl.innerHTML = `
+                                <div>
+                                    <h3 class="font-bold">${item.name}</h3>
+                                    <p>${descriptionText}</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="item-price">${price}</span>
+                                    ${buyButtonHtml}
+                                </div>
+                            `;
+                        }
+                    }
+                    shopItemsContainer.appendChild(itemEl);
+                });
+            });
+
+            document.querySelectorAll('.buy-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = e.target.dataset.id;
+                    const item = shopItems.find(i => i.id === itemId);
+                    if (!item) return;
+
+                    let price;
+                    if (item.id === 'better-earning') {
+                        price = item.price[item.currentLevel];
+                    } else if (Array.isArray(item.price)) {
+                        price = item.price[item.currentLevel] || null;
+                    } else {
+                        price = item.price * (item.currentLevel + 1);
+                    }
+                    
+                    if (price === null) return;
+                    
+                    if (money >= price) {
+                        money -= price;
+                        item.currentLevel++;
+                        item.applyUpgrade.call(item);
+                        updateUI();
+                        saveState();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.buy-chance-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const itemId = e.target.dataset.id;
+                    const side = e.target.dataset.side;
+                    const item = shopItems.find(i => i.id === itemId);
+                    const price = item.price;
+                    if (item && money >= price) {
+                         if ((side === 'heads' && headsWinChance < 1) || (side === 'tails' && tailsWinChance < 1)) {
+                            money -= price;
+                            item.currentLevel++;
+                            item.applyUpgrade(side);
+                            updateUI();
+                            saveState();
+                        }
+                    }
+                });
+            });
+        }
+
+        function flipCoin(userChoice) {
+            if (isFlipping) return;
+            isFlipping = true;
+            headsBtn.disabled = true;
+            tailsBtn.disabled = true;
+            shopBtn.disabled = true;
+            autoFlipBtn.disabled = true;
+            useLuckCharmBtn.disabled = true;
+
+            flipCount++;
+            flipCountDisplay.textContent = flipCount;
+
+            const baseSpeed = 2000;
+            const finalSpeed = baseSpeed / flipSpeedMultiplier;
+
+            const coins = document.querySelectorAll('.coin');
+            coins.forEach(coin => {
+                coin.classList.remove('fire-trail', 'water-trail', 'glow-trail');
+                coin.classList.add('flipping');
+                coin.style.animationDuration = `${finalSpeed}ms`;
+            });
+            messageDisplay.textContent = 'Mince se točí...';
+
+            setTimeout(() => {
+                let headsCount = 0;
+                let tailsCount = 0;
+                let winChance = userChoice === 'heads' ? headsWinChance : tailsWinChance;
+                
+                if (luckCharmCount > 0) {
+                    const luckBoost = 0.25;
+                    winChance = Math.min(1, winChance + luckBoost);
+                    luckCharmCount--;
+                }
+
+                coins.forEach(coin => {
+                    const result = Math.random() < winChance;
+                    if (result) {
+                        if (userChoice === 'heads') {
+                            headsCount++;
+                            coin.style.transform = `rotateY(1080deg)`;
+                        } else {
+                            tailsCount++;
+                            coin.style.transform = `rotateY(1260deg)`;
+                        }
+                    } else {
+                        if (userChoice === 'heads') {
+                            tailsCount++;
+                            coin.style.transform = `rotateY(1260deg)`;
+                        } else {
+                            headsCount++;
+                            coin.style.transform = `rotateY(1080deg)`;
+                        }
+                    }
+                    coin.classList.remove('flipping');
+                });
+                
+                setTimeout(() => {
+                    const winCount = userChoice === 'heads' ? headsCount : tailsCount;
+                    const loseCount = userChoice === 'heads' ? tailsCount : headsCount;
+                    
+                    if (winCount > loseCount) {
+                        money *= winAmountMultiplier;
+                        messageDisplay.textContent = `Výhra! Padlo ${winCount} ${userChoice === 'heads' ? 'Panen' : 'Orlů'}. Vaše peníze se násobí! Nyní máte ${money} peněz.`;
+                    } else if (loseCount > winCount) {
+                        const lostAmount = Math.floor(money / 2);
+                        money -= lostAmount;
+                        messageDisplay.textContent = `Prohra! Padlo ${loseCount} ${userChoice === 'heads' ? 'Orlů' : 'Panen'}. Ztrácíte ${lostAmount} peněz.`;
+                    } else {
+                        money += Math.floor(multiFlipCount * winAmountMultiplier * 5);
+                        messageDisplay.textContent = `Remíza! Padlo ${headsCount} Panen a ${tailsCount} Orlů. Získáváte ${Math.floor(multiFlipCount * winAmountMultiplier * 5)} peněz.`;
+                    }
+                    updateUI();
+                    saveState();
+                    isFlipping = false;
+                    headsBtn.disabled = false;
+                    tailsBtn.disabled = false;
+                    shopBtn.disabled = false;
+                    autoFlipBtn.disabled = false;
+                    useLuckCharmBtn.disabled = false;
+                }, 500);
+            }, finalSpeed);
+        }
+
+        function startAutoFlip() {
+            if (isAutoFlipping) return;
+            isAutoFlipping = true;
+            autoFlipBtn.textContent = 'Zastavit';
+            const flipInterval = (2000 / flipSpeedMultiplier) + 600;
+            autoFlipInterval = setInterval(() => {
+                const randomChoice = Math.random() < 0.5 ? 'heads' : 'tails';
+                flipCoin(randomChoice);
+            }, flipInterval);
+        }
+
+        function stopAutoFlip() {
+            isAutoFlipping = false;
+            autoFlipBtn.textContent = 'Automaticky točit';
+            clearInterval(autoFlipInterval);
+            autoFlipInterval = null;
+        }
+
+        headsBtn.addEventListener('click', () => {
+            flipCoin('heads');
+        });
+
+        tailsBtn.addEventListener('click', () => {
+            flipCoin('tails');
+        });
+
+        shopBtn.addEventListener('click', () => {
+            shopModal.classList.add('open');
+            updateUI();
+        });
+        
+        autoFlipBtn.addEventListener('click', () => {
+            if (isAutoFlipping) {
+                stopAutoFlip();
+            } else {
+                startAutoFlip();
+            }
+        });
+
+        useLuckCharmBtn.addEventListener('click', () => {
+            const randomChoice = Math.random() < 0.5 ? 'heads' : 'tails';
+            flipCoin(randomChoice);
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            shopModal.classList.remove('open');
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === shopModal) {
+                shopModal.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
